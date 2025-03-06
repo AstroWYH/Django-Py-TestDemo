@@ -26,6 +26,11 @@ urlpatterns = [
     # 联通新闻中心
     path('news/', views.news),
     path('something/', views.something),
-    path('login/', views.login)
+    path('login/', views.login),
+    path('orm', views.orm),
+    path('info/list/', views.info_list),
+    path('info/add/', views.info_add),
+    path('info/delete/', views.info_delete)
+    
     
 ]

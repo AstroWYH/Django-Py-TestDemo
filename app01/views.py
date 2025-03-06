@@ -1,4 +1,5 @@
 from django.shortcuts import render, HttpResponse, redirect
+from app01.models import Department,UserInfo
 
 # Create your views here.
 def index(request):
@@ -68,3 +69,70 @@ def login(request):
 
     # return HttpResponse("登陆失败")
     return render(request, "login.html", {"error_msg": "用户名或密码错误"})
+
+def orm(request):
+    # 测试 ORM 操作表中的数据
+    # Department.objects.create(title="Market")
+    # Department.objects.create(title="RD")
+    # Department.objects.create(title="Operation")
+    
+    # 1.新建数据
+    # UserInfo.objects.create(name="zx", password="123", age=18)
+    # UserInfo.objects.create(name="client", password="123", age=18)
+    # UserInfo.objects.create(name="wangyuhang", password="123", age=18)
+    # UserInfo.objects.create(name="hanbabang", password="123")
+    
+    # 2.删除数据
+    # UserInfo.objects.filter(id=3).delete()
+    # Department.objects.all().delete()
+    
+    # 3.获取数据
+    # datalist = [行, 行, 行] QuerySet 类型
+    # data_list = UserInfo.objects.all()
+    # print(data_list)
+    # for obj in data_list:
+    #     print(obj.id, obj.name, obj.password, obj.age)
+    
+    # data_list = UserInfo.objects.filter(id=1)
+    # print(data_list)
+    
+    # row_obj = UserInfo.objects.filter(id=1).first()
+    # print(row_obj.id)
+    
+    # 4.更新数据
+    # UserInfo.objects.all().update(password=999)
+    # UserInfo.objects.filter(id=2).update(age=999)
+    UserInfo.objects.filter(name="wangyuhang").update(age=999)
+    
+    return HttpResponse("success")
+
+def info_list(request):
+    # 1.获取数据库中所有的用户信息
+    data_list = UserInfo.objects.all()
+    print(data_list)
+    
+    return render(request, "info_list.html", {"data_list": data_list})
+
+def info_add(request):
+    if request.method == "GET":
+        print("------------------ 1 ------------------")
+        return render(request, 'info_add.html')
+    
+    # 获取用户提交的数据
+    user = request.POST.get("user")
+    pwd = request.POST.get("pwd")
+    age = request.POST.get("age")
+    
+    # 添加到数据库
+    print("------------------ 2 ------------------")
+    UserInfo.objects.create(name=user, password=pwd, age=age)
+    
+    # return HttpResponse("success")
+    return redirect("/info/list/")
+
+def info_delete(request):
+    nid = request.GET.get("nid")
+    UserInfo.objects.filter(id=nid).delete()
+    
+    # return HttpResponse('delete success')
+    return redirect("/info/list/")
